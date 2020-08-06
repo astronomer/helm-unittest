@@ -1,8 +1,8 @@
 # helm unittest
 
-[![CircleCI](https://circleci.com/gh/quintush/helm-unittest.svg?style=svg)](https://circleci.com/gh/quintush/helm-unittest)
-[![Go Report Card](https://goreportcard.com/badge/github.com/quintush/helm-unittest)](https://goreportcard.com/report/github.com/quintush/helm-unittest)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=quintush_helm-unittest&metric=alert_status)](https://sonarcloud.io/dashboard?id=quintush_helm-unittest)
+[![CircleCI](https://circleci.com/gh/astronomer/helm-unittest.svg?style=svg)](https://circleci.com/gh/astronomer/helm-unittest)
+[![Go Report Card](https://goreportcard.com/badge/github.com/astronomer/helm-unittest)](https://goreportcard.com/report/github.com/astronomer/helm-unittest)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=astronomer_helm-unittest&metric=alert_status)](https://sonarcloud.io/dashboard?id=astronomer_helm-unittest)
 
 Unit test for *helm chart* in YAML to keep your chart consistent and robust!
 
@@ -31,7 +31,7 @@ If you are ready for writing tests, check the [DOCUMENT](./DOCUMENT.md) for the 
 ## Install
 
 ```
-$ helm plugin install https://github.com/quintush/helm-unittest
+$ helm plugin install https://github.com/astronomer/helm-unittest
 ```
 
 It will install the latest version of binary into helm plugin directory.
@@ -172,11 +172,11 @@ This plugin is inspired by [helm-template](https://github.com/technosophos/helm-
 
 And there are some other helm commands you might want to use:
 
-- [`helm template`](https://github.com/kubernetes/helm/blob/master/docs/helm/helm_template.md): render the chart and print the output.
+- [`helm template`](https://github.com/kubernetes/helm/blob/main/docs/helm/helm_template.md): render the chart and print the output.
 
-- [`helm lint`](https://github.com/kubernetes/helm/blob/master/docs/helm/helm_lint.md): examines a chart for possible issues, useful to validate chart dependencies.
+- [`helm lint`](https://github.com/kubernetes/helm/blob/main/docs/helm/helm_lint.md): examines a chart for possible issues, useful to validate chart dependencies.
 
-- [`helm test`](https://github.com/kubernetes/helm/blob/master/docs/helm/helm_test.md): test a release with testing pod defined in chart. Note this does create resources on your cluster to verify if your release is correct. Check the [doc](https://github.com/kubernetes/helm/blob/master/docs/chart_tests.md).
+- [`helm test`](https://github.com/kubernetes/helm/blob/main/docs/helm/helm_test.md): test a release with testing pod defined in chart. Note this does create resources on your cluster to verify if your release is correct. Check the [doc](https://github.com/kubernetes/helm/blob/main/docs/chart_tests.md).
 
 ## License
 
@@ -188,7 +188,7 @@ Issues and PRs are welcome!
 Before start developing this plugin, you must have [go] (https://golang.org/doc/install) >= 1.14 installed, and run:
 
 ```
-git clone git@github.com:quintush/helm-unittest.git
+git clone git@github.com:astronomer/helm-unittest.git
 cd helm-unittest
 ```
 

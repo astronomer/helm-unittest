@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lrills/helm-unittest/unittest/snapshot"
+	"github.com/astronomer/helm-unittest/unittest/snapshot"
 	"gopkg.in/yaml.v2"
 	v3chart "helm.sh/helm/v3/pkg/chart"
 	v2chart "k8s.io/helm/pkg/proto/hapi/chart"

@@ -3,7 +3,7 @@ package validators
 import (
 	"regexp"
 
-	"github.com/lrills/helm-unittest/unittest/common"
+	"github.com/astronomer/helm-unittest/unittest/common"
 )
 
 // MatchRegexRawValidator validate value of Path match Pattern

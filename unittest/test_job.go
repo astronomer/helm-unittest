@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lrills/helm-unittest/unittest/common"
-	"github.com/lrills/helm-unittest/unittest/snapshot"
-	"github.com/lrills/helm-unittest/unittest/validators"
-	"github.com/lrills/helm-unittest/unittest/valueutils"
+	"github.com/astronomer/helm-unittest/unittest/common"
+	"github.com/astronomer/helm-unittest/unittest/snapshot"
+	"github.com/astronomer/helm-unittest/unittest/validators"
+	"github.com/astronomer/helm-unittest/unittest/valueutils"
 	yaml "gopkg.in/yaml.v2"
 
 	v3chart "helm.sh/helm/v3/pkg/chart"

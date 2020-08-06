@@ -1,4 +1,4 @@
-module github.com/lrills/helm-unittest
+module github.com/astronomer/helm-unittest
 
 go 1.14
 

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lrills/helm-unittest/unittest/snapshot"
+	"github.com/astronomer/helm-unittest/unittest/snapshot"
 )
 
 // TestSuiteResult result return by TestSuite.Run

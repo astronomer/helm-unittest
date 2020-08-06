@@ -7,7 +7,7 @@ import (
 	"path"
 	"testing"
 
-	. "github.com/lrills/helm-unittest/unittest"
+	. "github.com/astronomer/helm-unittest/unittest"
 	"github.com/stretchr/testify/assert"
 )
 

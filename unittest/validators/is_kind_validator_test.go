@@ -3,9 +3,9 @@ package validators_test
 import (
 	"testing"
 
-	. "github.com/lrills/helm-unittest/unittest/validators"
+	. "github.com/astronomer/helm-unittest/unittest/validators"
 
-	"github.com/lrills/helm-unittest/unittest/common"
+	"github.com/astronomer/helm-unittest/unittest/common"
 	"github.com/stretchr/testify/assert"
 )
 

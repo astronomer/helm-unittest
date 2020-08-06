@@ -1,6 +1,6 @@
 FROM golang:1.14.1-alpine3.11 as ALPINE-BUILDER
 RUN apk --no-cache add --quiet alpine-sdk=1.0-r0
-WORKDIR /go/src/github.com/lrills/helm-unittest/
+WORKDIR /go/src/github.com/astronomer/helm-unittest/
 COPY . .
 RUN install -d /opt && make install HELM_PLUGIN_DIR=/opt
 

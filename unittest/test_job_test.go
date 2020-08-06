@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/bradleyjkemp/cupaloy/v2"
-	. "github.com/lrills/helm-unittest/unittest"
-	"github.com/lrills/helm-unittest/unittest/snapshot"
+	. "github.com/astronomer/helm-unittest/unittest"
+	"github.com/astronomer/helm-unittest/unittest/snapshot"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v2"
 	"helm.sh/helm/v3/pkg/chart/loader"

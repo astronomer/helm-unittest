@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/lrills/helm-unittest/unittest/snapshot"
+	"github.com/astronomer/helm-unittest/unittest/snapshot"
 
 	v3chart "helm.sh/helm/v3/pkg/chart"
 	v3loader "helm.sh/helm/v3/pkg/chart/loader"
