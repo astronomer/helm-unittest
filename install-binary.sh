@@ -78,13 +78,13 @@ getDownloadURL() {
   fi
   echo "Retrieving $latest_url"
   if command -v "curl" >/dev/null 2>&1; then
-    DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+    DOWNLOAD_URL=$(curl -sL "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
     # Backward compatibility when arch type is not yet used.
     if [[ -z $DOWNLOAD_URL ]]; then
       echo "No download_url found for $OS-$ARCH, searching for $OS"
-      DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+      DOWNLOAD_URL=$(curl -sL "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
     fi
-    PROJECT_CHECKSUM=$(curl -s "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+    PROJECT_CHECKSUM=$(curl -sL "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
   elif command -v "wget" >/dev/null 2>&1; then
     DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
     # Backward compatibility when arch type is not yet used.
@@ -108,7 +108,7 @@ downloadFile() {
   mkdir -p "$PLUGIN_TMP_FOLDER"
   echo "Downloading $DOWNLOAD_URL to location $PLUGIN_TMP_FOLDER"
   if type "curl" >/dev/null 2>&1; then
-      (cd $PLUGIN_TMP_FOLDER && curl -LO "$DOWNLOAD_URL")
+      (cd $PLUGIN_TMP_FOLDER && curl -sL -O "$DOWNLOAD_URL")
   elif type "wget" >/dev/null 2>&1; then
       wget -P "$PLUGIN_TMP_FOLDER" "$DOWNLOAD_URL"
   fi
@@ -123,9 +123,9 @@ installFile() {
     echo Validating Checksum.
     if type "curl" >/dev/null 2>&1; then
       if type "shasum" >/dev/null 2>&1; then
-        curl -s -L "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | shasum -a 256 -c -s
+        curl -sL "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | shasum -a 256 -c -s
       elif type "sha256sum" >/dev/null 2>&1; then
-        curl -s -L "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | sha256sum -c -s
+        curl -sL "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | sha256sum -c -s
       else
         echo No Checksum as there is no shasum or sha256sum found.
       fi
