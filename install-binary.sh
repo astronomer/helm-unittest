@@ -4,16 +4,15 @@
 
 PROJECT_NAME="helm-unittest"
 PROJECT_GH="astronomer/$PROJECT_NAME"
-PROJECT_CHECKSUM_FILE="$PROJECT_NAME-checksum.sha"
 
-: ${HELM_PLUGIN_PATH:="$HELM_PLUGIN_DIR"}
+: "${HELM_PLUGIN_PATH:="$HELM_PLUGIN_DIR"}"
 
 # Convert the HELM_PLUGIN_PATH to unix if cygpath is
 # available. This is the case when using MSYS2 or Cygwin
 # on Windows where helm returns a Windows path but we
 # need a Unix path
 if type cygpath &> /dev/null; then
-  HELM_PLUGIN_PATH=$(cygpath -u $HELM_PLUGIN_PATH)
+  HELM_PLUGIN_PATH=$(cygpath -u "$HELM_PLUGIN_PATH")
 fi
 
 if [[ $SKIP_BIN_INSTALL == "1" ]]; then
@@ -38,7 +37,7 @@ initArch() {
 
 # initOS discovers the operating system for this system.
 initOS() {
-  OS=$(echo `uname`|tr '[:upper:]' '[:lower:]')
+  OS=$(uname | tr '[:upper:]' '[:lower:]')
 
   case "$OS" in
     # Msys support
@@ -68,8 +67,10 @@ verifySupported() {
 # getDownloadURL checks the latest available version.
 getDownloadURL() {
   # Use the GitHub API to find the latest version for this project.
+  # shellcheck disable=SC2155
   local latest_url="https://api.github.com/repos/$PROJECT_GH/releases/latest"
   if [[ -z $HELM_PLUGIN_UPDATE ]]; then
+    # shellcheck disable=SC2155
     local version=$(git describe --tags --exact-match 2>/dev/null)
     if [ -n "$version" ]; then
       latest_url="https://api.github.com/repos/$PROJECT_GH/releases/tags/$version"
@@ -77,21 +78,25 @@ getDownloadURL() {
   fi
   echo "Retrieving $latest_url"
   if type "curl" >/dev/null 2>&1; then
-    DOWNLOAD_URL=$(curl -s $latest_url | grep "$OS-$ARCH" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+    DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
     # Backward compatibility when arch type is not yet used.
     if [[ -z $DOWNLOAD_URL ]]; then
       echo "No download_url found only searching for $OS"
-      DOWNLOAD_URL=$(curl -s $latest_url | grep "$OS" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+      DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
     fi
-    PROJECT_CHECKSUM=$(curl -s $latest_url | grep "checksum" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+    if [[ -z $DOWNLOAD_URL ]] ; then
+      echo "Failed to get download_url. Aborting."
+      exit 1
+    fi
+    PROJECT_CHECKSUM=$(curl -s "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
   elif type "wget" >/dev/null 2>&1; then
-    DOWNLOAD_URL=$(wget -q -O - $latest_url | grep "$OS-$ARCH" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+    DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
     # Backward compatibility when arch type is not yet used.
     if [[ -z $DOWNLOAD_URL ]]; then
       echo "No download_url found only searching for $OS"
-      DOWNLOAD_URL=$(wget -q -O - $latest_url | grep "$OS" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+      DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
     fi
-    PROJECT_CHECKSUM=$(wget -q -O - $latest_url | grep "checksum" | awk '/\"browser_download_url\":/{gsub( /[,\"]/,"", $2); print $2}')
+    PROJECT_CHECKSUM=$(wget -q -O - "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
   fi
 }
 
@@ -118,17 +123,17 @@ installFile() {
     echo Validating Checksum.
     if type "curl" >/dev/null 2>&1; then
       if type "shasum" >/dev/null 2>&1; then
-        curl -s -L $PROJECT_CHECKSUM | grep $DOWNLOAD_FILE | shasum -a 256 -c -s
+        curl -s -L "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | shasum -a 256 -c -s
       elif type "sha256sum" >/dev/null 2>&1; then
-        curl -s -L $PROJECT_CHECKSUM | grep $DOWNLOAD_FILE | sha256sum -c -s
+        curl -s -L "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | sha256sum -c -s
       else
         echo No Checksum as there is no shasum or sha256sum found.
       fi
     elif type "wget" >/dev/null 2>&1; then
       if type "shasum" >/dev/null 2>&1; then
-        wget -q -O - $PROJECT_CHECKSUM | grep $DOWNLOAD_FILE | shasum -a 256 -c -s
+        wget -q -O - "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | shasum -a 256 -c -s
       elif type "sha256sum" >/dev/null 2>&1; then
-        wget -q -O - $PROJECT_CHECKSUM | grep $DOWNLOAD_FILE | sha256sum -c -s
+        wget -q -O - "$PROJECT_CHECKSUM" | grep "$DOWNLOAD_FILE" | sha256sum -c -s
       else
         echo No Checksum as there is no shasum or sha256sum found.
       fi
