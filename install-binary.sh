@@ -77,26 +77,26 @@ getDownloadURL() {
     fi
   fi
   echo "Retrieving $latest_url"
-  if type "curl" >/dev/null 2>&1; then
-    DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
+  if command -v "curl" >/dev/null 2>&1; then
+    DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+    # Backward compatibility when arch type is not yet used.
+    if [[ -z $DOWNLOAD_URL ]]; then
+      echo "No download_url found for $OS-$ARCH, searching for $OS"
+      DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+    fi
+    PROJECT_CHECKSUM=$(curl -s "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+  elif command -v "wget" >/dev/null 2>&1; then
+    DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
     # Backward compatibility when arch type is not yet used.
     if [[ -z $DOWNLOAD_URL ]]; then
       echo "No download_url found only searching for $OS"
-      DOWNLOAD_URL=$(curl -s "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
+      DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,\]/,"", $2); print $2}')
     fi
-    if [[ -z $DOWNLOAD_URL ]] ; then
-      echo "Failed to get download_url. Aborting."
-      exit 1
-    fi
-    PROJECT_CHECKSUM=$(curl -s "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
-  elif type "wget" >/dev/null 2>&1; then
-    DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS-$ARCH" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
-    # Backward compatibility when arch type is not yet used.
-    if [[ -z $DOWNLOAD_URL ]]; then
-      echo "No download_url found only searching for $OS"
-      DOWNLOAD_URL=$(wget -q -O - "$latest_url" | grep "$OS" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
-    fi
-    PROJECT_CHECKSUM=$(wget -q -O - "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,\"]/,"", $2); print $2}')
+    PROJECT_CHECKSUM=$(wget -q -O - "$latest_url" | grep "checksum" | awk '/"browser_download_url":/{gsub( /[,"]/,"", $2); print $2}')
+  fi
+  if [[ -z $DOWNLOAD_URL ]] ; then
+    echo "Failed to get download_url. Aborting."
+    return 1
   fi
 }
 
@@ -158,6 +158,7 @@ fail_trap() {
   if [ "$result" != "0" ]; then
     echo "Failed to install $PROJECT_NAME"
     echo "For support, go to https://github.com/kubernetes/helm"
+    echo "You may need to clean up by running: helm plugin uninstall '$PROJECT_NAME'"
   fi
   exit $result
 }
